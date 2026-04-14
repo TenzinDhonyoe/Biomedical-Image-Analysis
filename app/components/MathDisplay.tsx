@@ -20,5 +20,5 @@ export function BlockMath({ math }: { math: string }) {
       katex.render(math, ref.current, { throwOnError: false, displayMode: true });
     }
   }, [math]);
-  return <div ref={ref} className="my-2 overflow-x-auto" />;
+  return <div ref={ref} className="my-1.5 overflow-x-auto" />;
 }

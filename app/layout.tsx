@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BME 872 - Biomedical Image Analysis Review",
-  description: "Comprehensive exam review for BME 872: Biomedical Image Analysis",
+  title: "BME 872 -- Biomedical Image Analysis",
+  description:
+    "Course review for BME 872: Biomedical Image Analysis",
 };
 
 export default function RootLayout({

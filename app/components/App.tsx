@@ -10,59 +10,53 @@ type Tab = 'chapters' | 'quiz';
 export default function App() {
   const [tab, setTab] = useState<Tab>('chapters');
 
-  const totalCards = chapters.reduce((sum, ch) => sum + ch.flashcards.length, 0);
+  const totalCards = chapters.reduce((s, c) => s + c.flashcards.length, 0);
+  const totalTopics = chapters.reduce((s, c) => s + c.topics.length, 0);
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur border-b border-[#1e293b]">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-[#38bdf8] to-[#06b6d4] bg-clip-text text-transparent">
-                BME 872
-              </h1>
-              <p className="text-xs text-[#64748b]">
-                Biomedical Image Analysis Review
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setTab('chapters')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                  tab === 'chapters'
-                    ? 'bg-[#38bdf8] text-[#0f172a]'
-                    : 'bg-[#1e293b] text-[#94a3b8] hover:text-[#e2e8f0]'
-                }`}
-              >
-                Chapters
-              </button>
-              <button
-                onClick={() => setTab('quiz')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                  tab === 'quiz'
-                    ? 'bg-[#38bdf8] text-[#0f172a]'
-                    : 'bg-[#1e293b] text-[#94a3b8] hover:text-[#e2e8f0]'
-                }`}
-              >
-                Quiz ({totalCards})
-              </button>
-            </div>
+      <header className="sticky top-0 z-50 bg-white border-b border-[#e5e7eb]">
+        <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-[#111827] tracking-tight">
+            BME 872 <span className="hidden sm:inline font-normal text-[#6b7280]">— Biomedical Image Analysis Course Review</span>
+          </h1>
+          <div className="flex gap-1">
+            <button
+              onClick={() => setTab('chapters')}
+              className={`px-3 py-1.5 rounded text-sm transition-colors cursor-pointer ${
+                tab === 'chapters'
+                  ? 'bg-[#111827] text-white'
+                  : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
+              }`}
+            >
+              Lectures
+            </button>
+            <button
+              onClick={() => setTab('quiz')}
+              className={`px-3 py-1.5 rounded text-sm transition-colors cursor-pointer ${
+                tab === 'quiz'
+                  ? 'bg-[#111827] text-white'
+                  : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
+              }`}
+            >
+              Quiz
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Nav (chapters quick links) */}
+      {/* Lecture nav pills */}
       {tab === 'chapters' && (
-        <nav className="sticky top-[73px] z-40 bg-[#0f172a]/90 backdrop-blur border-b border-[#1e293b] overflow-x-auto">
-          <div className="max-w-4xl mx-auto px-4 py-2 flex gap-2">
+        <nav className="sticky top-[57px] z-40 bg-white/95 backdrop-blur-sm border-b border-[#e5e7eb] overflow-x-auto">
+          <div className="max-w-3xl mx-auto px-5 py-2 flex gap-1.5">
             {chapters.map((ch) => (
               <a
                 key={ch.id}
                 href={`#ch${ch.id}`}
-                className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#1e293b] hover:bg-[#334155] flex items-center justify-center text-xs text-[#94a3b8] hover:text-[#38bdf8] transition-colors font-mono"
+                className="flex-shrink-0 px-2.5 py-1 rounded text-xs text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6] transition-colors font-mono"
               >
-                {ch.id}
+                L{ch.id}
               </a>
             ))}
           </div>
@@ -70,42 +64,24 @@ export default function App() {
       )}
 
       {/* Main */}
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
         {tab === 'chapters' ? (
-          <div className="space-y-6">
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="bg-[#1e293b] rounded-xl p-4 border border-[#334155] text-center">
-                <div className="text-2xl font-bold text-[#38bdf8]">10</div>
-                <div className="text-xs text-[#64748b]">Chapters</div>
-              </div>
-              <div className="bg-[#1e293b] rounded-xl p-4 border border-[#334155] text-center">
-                <div className="text-2xl font-bold text-[#06b6d4]">
-                  {chapters.reduce((s, c) => s + c.topics.length, 0)}
-                </div>
-                <div className="text-xs text-[#64748b]">Topics</div>
-              </div>
-              <div className="bg-[#1e293b] rounded-xl p-4 border border-[#334155] text-center">
-                <div className="text-2xl font-bold text-[#22c55e]">
-                  {totalCards}
-                </div>
-                <div className="text-xs text-[#64748b]">Flashcards</div>
-              </div>
-            </div>
+          <div>
+            {/* Summary line */}
+            <p className="text-sm text-[#9ca3af] mb-8">
+              {chapters.length} lectures · {totalTopics} topics · {totalCards} flashcards
+            </p>
 
-            {chapters.map((ch) => (
-              <ChapterSection key={ch.id} chapter={ch} />
-            ))}
+            <div className="space-y-3">
+              {chapters.map((ch) => (
+                <ChapterSection key={ch.id} chapter={ch} />
+              ))}
+            </div>
           </div>
         ) : (
           <QuizMode />
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-[#1e293b] py-4 text-center text-xs text-[#475569]">
-        BME 872 Exam Review -- Good luck!
-      </footer>
     </div>
   );
 }

@@ -52,18 +52,16 @@ export default function QuizMode() {
 
   if (!active) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-2xl font-bold text-[#e2e8f0] mb-4">
-          Quiz Mode
-        </h3>
-        <p className="text-[#94a3b8] mb-6">
-          Test yourself with {allCards.length} randomized questions from all chapters.
+      <div className="py-16 text-center">
+        <h2 className="text-xl font-semibold text-[#111827] mb-2">Quiz Mode</h2>
+        <p className="text-sm text-[#6b7280] mb-8">
+          {allCards.length} randomized questions from all lectures.
         </p>
         <button
           onClick={startQuiz}
-          className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#06b6d4] text-[#0f172a] font-bold text-lg hover:opacity-90 transition-opacity cursor-pointer"
+          className="px-5 py-2 rounded bg-[#111827] text-white text-sm font-medium hover:bg-[#374151] transition-colors cursor-pointer"
         >
-          Start Quiz
+          Start
         </button>
       </div>
     );
@@ -73,86 +71,92 @@ export default function QuizMode() {
     const total = score.correct + score.incorrect;
     const pct = Math.round((score.correct / total) * 100);
     return (
-      <div className="text-center py-12">
-        <h3 className="text-2xl font-bold text-[#e2e8f0] mb-4">
-          Quiz Complete!
-        </h3>
-        <div className="text-6xl font-bold mb-4" style={{ color: pct >= 70 ? '#22c55e' : pct >= 50 ? '#eab308' : '#ef4444' }}>
+      <div className="py-16 text-center">
+        <h2 className="text-xl font-semibold text-[#111827] mb-6">Done</h2>
+        <div
+          className="text-5xl font-bold mb-2"
+          style={{ color: pct >= 70 ? '#16a34a' : pct >= 50 ? '#ca8a04' : '#dc2626' }}
+        >
           {pct}%
         </div>
-        <p className="text-[#94a3b8] mb-2">
-          {score.correct} correct / {total} total
+        <p className="text-sm text-[#6b7280] mb-1">
+          {score.correct} correct out of {total}
         </p>
-        <div className="w-64 mx-auto bg-[#334155] rounded-full h-3 mt-4 mb-8">
+        <div className="w-48 mx-auto bg-[#f3f4f6] rounded-full h-1.5 mt-4 mb-8">
           <div
-            className="h-3 rounded-full progress-bar"
+            className="h-1.5 rounded-full transition-all duration-700"
             style={{
               width: `${pct}%`,
-              backgroundColor: pct >= 70 ? '#22c55e' : pct >= 50 ? '#eab308' : '#ef4444',
+              backgroundColor: pct >= 70 ? '#16a34a' : pct >= 50 ? '#ca8a04' : '#dc2626',
             }}
           />
         </div>
-        <button
-          onClick={startQuiz}
-          className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#06b6d4] text-[#0f172a] font-semibold hover:opacity-90 transition-opacity cursor-pointer mr-4"
-        >
-          Try Again
-        </button>
-        <button
-          onClick={() => setActive(false)}
-          className="px-6 py-2.5 rounded-xl bg-[#334155] text-[#e2e8f0] font-semibold hover:bg-[#475569] transition-colors cursor-pointer"
-        >
-          Exit Quiz
-        </button>
+        <div className="flex gap-3 justify-center">
+          <button
+            onClick={startQuiz}
+            className="px-4 py-2 rounded bg-[#111827] text-white text-sm font-medium hover:bg-[#374151] transition-colors cursor-pointer"
+          >
+            Retry
+          </button>
+          <button
+            onClick={() => setActive(false)}
+            className="px-4 py-2 rounded border border-[#e5e7eb] text-sm text-[#6b7280] hover:bg-[#f9fafb] transition-colors cursor-pointer"
+          >
+            Exit
+          </button>
+        </div>
       </div>
     );
   }
 
   const q = shuffled[current];
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-sm text-[#64748b] font-mono">
-          Question {current + 1}/{shuffled.length}
+    <div className="max-w-xl mx-auto py-8">
+      <div className="flex justify-between items-center mb-5">
+        <span className="text-xs text-[#9ca3af] font-mono">
+          {current + 1} / {shuffled.length}
         </span>
-        <span className="text-sm font-mono">
-          <span className="text-[#22c55e]">{score.correct}</span>
-          {' / '}
-          <span className="text-[#ef4444]">{score.incorrect}</span>
+        <span className="text-xs font-mono">
+          <span className="text-[#16a34a]">{score.correct}</span>
+          <span className="text-[#d1d5db] mx-1">/</span>
+          <span className="text-[#dc2626]">{score.incorrect}</span>
         </span>
       </div>
-      <div className="bg-[#1e293b] border border-[#334155] rounded-xl p-6">
-        <div className="text-xs text-[#38bdf8] mb-2 font-mono">
-          Chapter {q.chapterId}
-        </div>
-        <p className="text-[#e2e8f0] text-lg mb-6">{q.question}</p>
+
+      <div className="border border-[#e5e7eb] rounded p-5">
+        <p className="text-[11px] text-[#9ca3af] font-mono mb-3">
+          Lecture {q.chapterId}
+        </p>
+        <p className="text-sm text-[#111827] leading-relaxed mb-5">
+          {q.question}
+        </p>
 
         {!revealed ? (
           <button
             onClick={() => setRevealed(true)}
-            className="w-full py-3 rounded-xl bg-[#334155] text-[#e2e8f0] font-semibold hover:bg-[#475569] transition-colors cursor-pointer"
+            className="w-full py-2.5 rounded border border-[#e5e7eb] text-sm text-[#6b7280] hover:bg-[#f9fafb] transition-colors cursor-pointer"
           >
             Reveal Answer
           </button>
         ) : (
           <>
-            <div className="bg-[#0f172a] rounded-lg p-4 border border-[#22c55e]/20 mb-6">
-              <p className="text-[#cbd5e1] text-sm leading-relaxed whitespace-pre-line">
+            <div className="bg-[#f9fafb] border border-[#e5e7eb] rounded p-4 mb-5">
+              <p className="text-sm text-[#374151] leading-relaxed whitespace-pre-line">
                 {q.answer}
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
                 onClick={() => markAnswer(true)}
-                className="flex-1 py-3 rounded-xl bg-[#22c55e]/20 text-[#22c55e] font-semibold border border-[#22c55e]/30 hover:bg-[#22c55e]/30 transition-colors cursor-pointer"
+                className="flex-1 py-2.5 rounded border border-[#d1fae5] bg-[#f0fdf4] text-sm text-[#16a34a] font-medium hover:bg-[#dcfce7] transition-colors cursor-pointer"
               >
-                Got it right
+                Correct
               </button>
               <button
                 onClick={() => markAnswer(false)}
-                className="flex-1 py-3 rounded-xl bg-[#ef4444]/20 text-[#ef4444] font-semibold border border-[#ef4444]/30 hover:bg-[#ef4444]/30 transition-colors cursor-pointer"
+                className="flex-1 py-2.5 rounded border border-[#fecaca] bg-[#fef2f2] text-sm text-[#dc2626] font-medium hover:bg-[#fee2e2] transition-colors cursor-pointer"
               >
-                Got it wrong
+                Wrong
               </button>
             </div>
           </>
