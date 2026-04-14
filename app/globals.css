@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --accent: #38bdf8;
+  --accent2: #06b6d4;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --success: #22c55e;
+  --danger: #ef4444;
 }
 
 @theme inline {
@@ -12,15 +18,42 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* KaTeX overrides */
+.katex { font-size: 1.05em !important; color: #e2e8f0; }
+.katex-display { margin: 0.75em 0 !important; overflow-x: auto; overflow-y: hidden; }
+
+/* Flashcard flip */
+.flashcard-inner {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+.flashcard-flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+.flashcard-front, .flashcard-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Progress bar animation */
+@keyframes progressGrow {
+  from { width: 0%; }
+}
+.progress-bar {
+  animation: progressGrow 0.8s ease-out;
 }
