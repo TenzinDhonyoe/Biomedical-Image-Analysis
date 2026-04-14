@@ -3,120 +3,144 @@
 import { useState } from 'react';
 import type { Chapter } from '../courseData';
 import { BlockMath } from './MathDisplay';
-import FlashCard from './FlashCard';
 
-export default function ChapterSection({ chapter }: { chapter: Chapter }) {
+export default function ChapterSection({
+  chapter,
+  isCompleted,
+  onToggleComplete,
+}: {
+  chapter: Chapter;
+  isCompleted: boolean;
+  onToggleComplete: () => void;
+}) {
   const [expanded, setExpanded] = useState(false);
-  const [showCards, setShowCards] = useState(false);
-  const [cardIndex, setCardIndex] = useState(0);
+  const [openTopics, setOpenTopics] = useState<Set<number>>(new Set());
+  const [revealedChecks, setRevealedChecks] = useState<Set<number>>(new Set());
+
+  function toggleTopic(i: number) {
+    setOpenTopics((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }
+
+  function revealCheck(i: number) {
+    setRevealedChecks((prev) => new Set(prev).add(i));
+  }
 
   return (
-    <section id={`ch${chapter.id}`} className="scroll-mt-28">
-      {/* Collapsed / Header */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full text-left flex items-start gap-3 py-3 px-3 -mx-3 rounded-lg hover:bg-[#f9fafb] transition-colors cursor-pointer group"
-      >
-        <span className="flex-shrink-0 w-7 h-7 rounded bg-[#f3f4f6] group-hover:bg-[#e5e7eb] flex items-center justify-center text-xs text-[#6b7280] font-mono transition-colors">
-          {expanded ? '\u2212' : '+'}
-        </span>
-        <div className="flex-1 min-w-0 pt-0.5">
-          <div className="flex items-baseline gap-2">
-            <span className="text-xs text-[#9ca3af] font-mono">L{chapter.id}</span>
-            <h2 className="text-[15px] font-medium text-[#111827] leading-snug">
-              {chapter.title}
-            </h2>
+    <section id={`ch${chapter.id}`} className="scroll-mt-32">
+      {/* Header row */}
+      <div className="flex items-center gap-2 py-3">
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex-1 flex items-start gap-2.5 text-left cursor-pointer group min-w-0"
+        >
+          <span className="flex-shrink-0 mt-0.5 text-[#999] text-xs font-mono w-4 text-center">
+            {expanded ? '\u2212' : '+'}
+          </span>
+          <div className="min-w-0">
+            <div className="flex items-baseline gap-1.5 flex-wrap">
+              <span className="text-[11px] text-[#999] font-mono uppercase">L{chapter.id}</span>
+              <h2 className="text-[14px] font-medium text-[#1a1a1a] leading-snug">
+                {chapter.title}
+              </h2>
+            </div>
+            <p className="text-[11px] text-[#bbb] mt-0.5">
+              {chapter.topics.length} topics · {chapter.flashcards.length} cards
+            </p>
           </div>
-          <p className="text-xs text-[#9ca3af] mt-0.5">
-            {chapter.topics.length} topics · {chapter.flashcards.length} flashcards
-          </p>
-        </div>
-      </button>
+        </button>
+        <button
+          onClick={onToggleComplete}
+          className={`flex-shrink-0 w-5 h-5 rounded border text-xs flex items-center justify-center cursor-pointer transition-colors ${
+            isCompleted
+              ? 'bg-[#16a34a] border-[#16a34a] text-white'
+              : 'border-[#ddd] text-transparent hover:border-[#999]'
+          }`}
+          title={isCompleted ? 'Mark incomplete' : 'Mark complete'}
+        >
+          {isCompleted ? '\u2713' : ''}
+        </button>
+      </div>
 
       {/* Expanded content */}
       {expanded && (
-        <div className="pl-10 pb-6 pt-2">
-          {/* Topics */}
-          <div className="space-y-5">
-            {chapter.topics.map((topic, i) => (
-              <div key={i}>
-                <h3 className="text-sm font-semibold text-[#111827] mb-1.5">
-                  {topic.title}
-                </h3>
-                <div className="text-sm text-[#374151] leading-relaxed whitespace-pre-line">
-                  {topic.content}
-                </div>
-                {topic.formulas && topic.formulas.length > 0 && (
-                  <div className="mt-3 bg-[#f9fafb] border border-[#e5e7eb] rounded px-4 py-3">
-                    <div className="text-[11px] text-[#9ca3af] uppercase tracking-wide mb-1.5 font-mono">
-                      Key Formulas
-                    </div>
-                    {topic.formulas.map((f, fi) => (
-                      <BlockMath key={fi} math={f} />
-                    ))}
-                  </div>
-                )}
-                {i < chapter.topics.length - 1 && (
-                  <div className="border-b border-[#f3f4f6] mt-5" />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Flashcards toggle */}
-          <div className="mt-6 pt-4 border-t border-[#e5e7eb]">
-            <button
-              onClick={() => {
-                setShowCards(!showCards);
-                setCardIndex(0);
-              }}
-              className="text-sm text-[#2563eb] hover:text-[#1d4ed8] font-medium cursor-pointer"
-            >
-              {showCards ? 'Hide' : 'Practice'} flashcards ({chapter.flashcards.length})
-            </button>
-          </div>
-
-          {/* Flashcards */}
-          {showCards && (
-            <div className="mt-4">
-              <FlashCard
-                card={chapter.flashcards[cardIndex]}
-                index={cardIndex}
-                total={chapter.flashcards.length}
-              />
-              <div className="flex justify-between mt-3">
-                <button
-                  onClick={() =>
-                    setCardIndex(
-                      (cardIndex - 1 + chapter.flashcards.length) %
-                        chapter.flashcards.length
-                    )
-                  }
-                  className="px-3 py-1.5 rounded text-sm text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6] transition-colors cursor-pointer"
-                >
-                  &larr; Prev
-                </button>
-                <span className="text-xs text-[#9ca3af] self-center font-mono">
-                  {cardIndex + 1} / {chapter.flashcards.length}
+        <div className="pl-6 pb-5">
+          {chapter.topics.map((topic, i) => (
+            <div key={i} className="mb-1">
+              {/* Topic toggle */}
+              <button
+                onClick={() => toggleTopic(i)}
+                className="w-full text-left flex items-baseline gap-2 py-1.5 cursor-pointer group"
+              >
+                <span className="text-[10px] text-[#ccc] font-mono">
+                  {openTopics.has(i) ? '\u2212' : '+'}
                 </span>
-                <button
-                  onClick={() =>
-                    setCardIndex(
-                      (cardIndex + 1) % chapter.flashcards.length
-                    )
-                  }
-                  className="px-3 py-1.5 rounded text-sm text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6] transition-colors cursor-pointer"
-                >
-                  Next &rarr;
-                </button>
+                <span className="text-[13px] font-medium text-[#333] group-hover:text-[#1a1a1a]">
+                  {topic.title}
+                </span>
+              </button>
+
+              {/* Topic content */}
+              {openTopics.has(i) && (
+                <div className="pl-5 pb-3">
+                  <div className="text-[13px] text-[#444] leading-relaxed whitespace-pre-line">
+                    {topic.content}
+                  </div>
+
+                  {topic.formulas && topic.formulas.length > 0 && (
+                    <div className="formula-block">
+                      <div className="text-[10px] text-[#999] uppercase tracking-wider mb-1 font-mono">
+                        Key Formulas
+                      </div>
+                      {topic.formulas.map((f, fi) => (
+                        <BlockMath key={fi} math={f} />
+                      ))}
+                    </div>
+                  )}
+
+                  {topic.examTip && (
+                    <div className="exam-tip">
+                      <strong>Exam Tip:</strong> {topic.examTip}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Quick Check section */}
+          {chapter.flashcards.length > 0 && (
+            <div className="quick-check mt-4">
+              <div className="text-[11px] text-[#999] uppercase tracking-wider font-mono mb-3">
+                Quick Check — {chapter.flashcards.length} questions
               </div>
+              {chapter.flashcards.map((fc, i) => (
+                <div key={i} className="mb-3 last:mb-0">
+                  <p className="text-[13px] text-[#333] font-medium mb-1">
+                    {i + 1}. {fc.question}
+                  </p>
+                  {revealedChecks.has(i) ? (
+                    <p className="text-[12px] text-[#555] bg-white rounded px-3 py-2 border border-[#e5e5e5] leading-relaxed whitespace-pre-line">
+                      {fc.answer}
+                    </p>
+                  ) : (
+                    <button
+                      onClick={() => revealCheck(i)}
+                      className="text-[12px] text-[#2563eb] hover:underline cursor-pointer"
+                    >
+                      Show answer
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
       )}
-
-      {/* Divider between chapters */}
-      {!expanded && <div className="border-b border-[#f3f4f6]" />}
     </section>
   );
 }

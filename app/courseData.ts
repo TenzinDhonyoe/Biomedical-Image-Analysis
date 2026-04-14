@@ -2,6 +2,7 @@ export interface Topic {
   title: string;
   content: string;
   formulas?: string[];
+  examTip?: string;
 }
 
 export interface FlashCard {
@@ -58,6 +59,7 @@ export const chapters: Chapter[] = [
           "x = ct",
           "\\Omega_S > 2\\Omega_N",
         ],
+        examTip: "Know the Nyquist theorem cold. If asked about aliasing, it means the sampling rate was below 2x the max frequency.",
       },
     ],
     flashcards: [
@@ -189,6 +191,7 @@ export const chapters: Chapter[] = [
           "S_k = \\sum_{j=0}^{k} \\frac{n_j}{n}",
           "\\hat{S}_k = \\text{Int}\\left[\\frac{S_k - S_k^{\\min}}{1 - S_k^{\\min}}(L-1) + 0.5\\right]",
         ],
+        examTip: "Histogram equalization is a CDF-based transform. Be able to compute S_k step by step given a small histogram. Remember: the result is never perfectly uniform because of rounding.",
       },
       {
         title: "Histogram Matching (Specification)",
@@ -288,6 +291,7 @@ export const chapters: Chapter[] = [
           "\\nabla^2 f \\Leftrightarrow -(u^2 + v^2)F(u,v)",
           "f(x,y)(-1)^{x+y} \\Leftrightarrow F(u - M/2, v - N/2)",
         ],
+        examTip: "Know the convolution theorem (spatial convolution = frequency multiplication) and that phase carries most structural info. These are the two most testable concepts from this chapter.",
       },
     ],
     flashcards: [
@@ -377,6 +381,7 @@ export const chapters: Chapter[] = [
         formulas: [
           "\\hat{F}(u,v) = \\frac{G(u,v)}{\\hat{H}(u,v)} = F(u,v) + \\frac{N(u,v)}{\\hat{H}(u,v)}",
         ],
+        examTip: "Be able to explain WHY inverse filtering fails (N/H blows up) and why Wiener filter fixes it (adds S_n/S_f term to denominator). This is a common exam comparison question.",
       },
       {
         title: "Wiener Filter",
@@ -466,6 +471,7 @@ export const chapters: Chapter[] = [
           "\\nabla^2 f = \\frac{\\partial^2 f}{\\partial x^2} + \\frac{\\partial^2 f}{\\partial y^2}",
           "\\nabla^2 h(r) = -\\left[\\frac{r^2 - \\sigma^2}{\\sigma^4}\\right]\\exp\\left(-\\frac{r^2}{2\\sigma^2}\\right)",
         ],
+        examTip: "LoG combines smoothing + edge detection. Know the 5x5 mask approximation and that edges are found at zero crossings. Also know the difference between Sobel/Prewitt/Roberts operators.",
       },
       {
         title: "Hough Transform",
@@ -550,6 +556,7 @@ export const chapters: Chapter[] = [
           "A \\circ B = (A \\ominus B) \\oplus B",
           "A \\bullet B = (A \\oplus B) \\ominus B",
         ],
+        examTip: "Opening = erosion then dilation (removes small protrusions). Closing = dilation then erosion (fills small holes). Both are idempotent. Know which to use for noise removal on binary images.",
       },
     ],
     flashcards: [
@@ -647,6 +654,7 @@ export const chapters: Chapter[] = [
           "\\text{Homogeneity} = \\sum_i\\sum_j \\frac{c_{ij}}{(i-j)^2 + 1}",
           "\\text{Entropy} = -\\sum_i\\sum_j c_{ij}\\log_2(c_{ij})",
         ],
+        examTip: "GLCM is a very testable topic. Be able to construct a small GLCM from a given image and positioning operator, normalize it, and compute contrast/homogeneity/entropy from it.",
       },
     ],
     flashcards: [

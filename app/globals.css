@@ -2,15 +2,16 @@
 
 :root {
   --bg: #ffffff;
-  --bg-secondary: #f9fafb;
-  --text: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
-  --border: #e5e7eb;
+  --text: #1a1a1a;
+  --text-2: #555;
+  --text-3: #999;
+  --border: #e5e5e5;
+  --border-light: #f0f0f0;
   --accent: #2563eb;
-  --accent-light: #eff6ff;
-  --success: #16a34a;
-  --danger: #dc2626;
+  --surface: #fafafa;
+  --green: #16a34a;
+  --red: #dc2626;
+  --amber: #d97706;
 }
 
 @theme inline {
@@ -20,25 +21,27 @@
   --font-mono: var(--font-geist-mono);
 }
 
+* { box-sizing: border-box; }
+
 body {
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
 
 /* KaTeX */
-.katex { font-size: 1em !important; color: #111827; }
+.katex { font-size: 1em !important; }
 .katex-display { margin: 0.5em 0 !important; overflow-x: auto; overflow-y: hidden; }
 
-/* Flashcard flip */
+/* Flashcard */
 .flashcard-inner {
-  transition: transform 0.45s;
+  transition: transform 0.4s ease;
   transform-style: preserve-3d;
 }
 .flashcard-flipped .flashcard-inner {
@@ -50,4 +53,40 @@ body {
 }
 .flashcard-back {
   transform: rotateY(180deg);
+}
+
+/* Exam tip callout */
+.exam-tip {
+  border-left: 3px solid var(--amber);
+  background: #fffbeb;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  color: #92400e;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Quick check */
+.quick-check {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+  margin: 14px 0;
+  background: var(--surface);
+}
+.quick-check summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.quick-check summary:hover { text-decoration: underline; }
+
+/* Formula block */
+.formula-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin: 10px 0;
 }

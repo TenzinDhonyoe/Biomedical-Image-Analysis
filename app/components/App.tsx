@@ -1,87 +1,124 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { chapters } from '../courseData';
 import ChapterSection from './ChapterSection';
 import QuizMode from './QuizMode';
+import FlashCardDeck from './FlashCardDeck';
 
-type Tab = 'chapters' | 'quiz';
+type Tab = 'lectures' | 'flashcards' | 'mock';
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('chapters');
+  const [tab, setTab] = useState<Tab>('lectures');
+  const [completed, setCompleted] = useState<Set<number>>(new Set());
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('bme872-completed');
+    if (saved) setCompleted(new Set(JSON.parse(saved)));
+  }, []);
+
+  function toggleComplete(id: number) {
+    setCompleted((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      localStorage.setItem('bme872-completed', JSON.stringify([...next]));
+      return next;
+    });
+  }
 
   const totalCards = chapters.reduce((s, c) => s + c.flashcards.length, 0);
-  const totalTopics = chapters.reduce((s, c) => s + c.topics.length, 0);
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#e5e7eb]">
-        <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-[#111827] tracking-tight">
-            BME 872 <span className="hidden sm:inline font-normal text-[#6b7280]">— Biomedical Image Analysis Course Review</span>
-          </h1>
-          <div className="flex gap-1">
+      <header className="sticky top-0 z-50 bg-white border-b border-[#e5e5e5]">
+        <div className="max-w-2xl mx-auto px-4">
+          {/* Top bar */}
+          <div className="flex items-center justify-between h-12">
             <button
-              onClick={() => setTab('chapters')}
-              className={`px-3 py-1.5 rounded text-sm transition-colors cursor-pointer ${
-                tab === 'chapters'
-                  ? 'bg-[#111827] text-white'
-                  : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
-              }`}
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="sm:hidden text-[#555] text-lg cursor-pointer px-1"
+              aria-label="Toggle navigation"
             >
-              Lectures
+              {menuOpen ? '\u2715' : '\u2630'}
             </button>
-            <button
-              onClick={() => setTab('quiz')}
-              className={`px-3 py-1.5 rounded text-sm transition-colors cursor-pointer ${
-                tab === 'quiz'
-                  ? 'bg-[#111827] text-white'
-                  : 'text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6]'
-              }`}
-            >
-              Quiz
-            </button>
+            <h1 className="text-sm font-semibold text-[#1a1a1a] tracking-tight">
+              BME 872
+              <span className="hidden sm:inline font-normal text-[#999]">
+                {' '}Biomedical Image Analysis
+              </span>
+            </h1>
+            <span className="text-xs text-[#999] font-mono">
+              {completed.size}/{chapters.length}
+            </span>
           </div>
-        </div>
-      </header>
 
-      {/* Lecture nav pills */}
-      {tab === 'chapters' && (
-        <nav className="sticky top-[57px] z-40 bg-white/95 backdrop-blur-sm border-b border-[#e5e7eb] overflow-x-auto">
-          <div className="max-w-3xl mx-auto px-5 py-2 flex gap-1.5">
+          {/* Lecture nav - desktop always, mobile when menu open */}
+          <div className={`${menuOpen ? 'flex' : 'hidden'} sm:flex overflow-x-auto gap-0.5 pb-2 -mx-1`}>
             {chapters.map((ch) => (
               <a
                 key={ch.id}
                 href={`#ch${ch.id}`}
-                className="flex-shrink-0 px-2.5 py-1 rounded text-xs text-[#6b7280] hover:text-[#111827] hover:bg-[#f3f4f6] transition-colors font-mono"
+                onClick={() => { setTab('lectures'); setMenuOpen(false); }}
+                className={`flex-shrink-0 px-2 py-0.5 rounded text-xs transition-colors whitespace-nowrap ${
+                  completed.has(ch.id)
+                    ? 'text-[#16a34a]'
+                    : 'text-[#999] hover:text-[#1a1a1a]'
+                }`}
               >
-                L{ch.id}
+                L{ch.id}{completed.has(ch.id) ? ' \u2713' : ''}
               </a>
             ))}
           </div>
-        </nav>
-      )}
+
+          {/* Tabs */}
+          <div className="flex border-t border-[#f0f0f0]">
+            {(['lectures', 'flashcards', 'mock'] as Tab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex-1 py-2 text-xs font-medium tracking-wide uppercase transition-colors cursor-pointer ${
+                  tab === t
+                    ? 'text-[#1a1a1a] border-b-2 border-[#1a1a1a]'
+                    : 'text-[#999] hover:text-[#555]'
+                }`}
+              >
+                {t === 'lectures' ? 'Lectures' : t === 'flashcards' ? `Flashcards` : 'Mock Exam'}
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
 
       {/* Main */}
-      <main className="flex-1 max-w-3xl mx-auto w-full px-5 py-8">
-        {tab === 'chapters' ? (
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-6">
+        {tab === 'lectures' && (
           <div>
-            {/* Summary line */}
-            <p className="text-sm text-[#9ca3af] mb-8">
-              {chapters.length} lectures · {totalTopics} topics · {totalCards} flashcards
+            <p className="text-xs text-[#999] mb-5">
+              {chapters.length} lectures · {chapters.reduce((s, c) => s + c.topics.length, 0)} topics · {totalCards} review cards
             </p>
-
-            <div className="space-y-3">
+            <div className="divide-y divide-[#f0f0f0]">
               {chapters.map((ch) => (
-                <ChapterSection key={ch.id} chapter={ch} />
+                <ChapterSection
+                  key={ch.id}
+                  chapter={ch}
+                  isCompleted={completed.has(ch.id)}
+                  onToggleComplete={() => toggleComplete(ch.id)}
+                />
               ))}
             </div>
           </div>
-        ) : (
-          <QuizMode />
         )}
+        {tab === 'flashcards' && <FlashCardDeck />}
+        {tab === 'mock' && <QuizMode />}
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-[#f0f0f0] py-3 text-center text-[11px] text-[#ccc]">
+        BME 872 Exam Review
+      </footer>
     </div>
   );
 }
