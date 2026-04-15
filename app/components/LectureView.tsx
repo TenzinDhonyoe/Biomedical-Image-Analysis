@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Chapter } from '../courseData';
 import { BlockMath } from './MathDisplay';
 import ContentRenderer from './ContentRenderer';
+import InteractiveHost from './interactives/InteractiveHost';
 
 export default function LectureView({
   chapter,
@@ -69,6 +70,11 @@ export default function LectureView({
             <div className="mt-3">
               <ContentRenderer content={topic.content} />
             </div>
+
+            {/* Interactive demo */}
+            {topic.interactive && (
+              <InteractiveHost id={topic.interactive} />
+            )}
 
             {/* Formulas */}
             {topic.formulas && topic.formulas.length > 0 && (

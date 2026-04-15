@@ -122,6 +122,20 @@ body {
   color: #fbbf24;
 }
 
+/* Interactive container */
+.interactive-container {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.interactive-container canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.interactive-container select,
+.interactive-container button {
+  font-family: inherit;
+}
+
 /* Formula block */
 .formula-block {
   background: var(--surface);

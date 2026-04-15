@@ -3,6 +3,7 @@ export interface Topic {
   content: string;
   formulas?: string[];
   examTip?: string;
+  interactive?: string;
 }
 
 export interface FlashCard {
@@ -172,6 +173,7 @@ export const chapters: Chapter[] = [
           "s = c \\log(1 + r)",
           "s = c \\cdot r^{\\gamma}",
         ],
+        interactive: "gamma-transform",
       },
       {
         title: "Histogram Processing",
@@ -192,6 +194,7 @@ export const chapters: Chapter[] = [
           "\\hat{S}_k = \\text{Int}\\left[\\frac{S_k - S_k^{\\min}}{1 - S_k^{\\min}}(L-1) + 0.5\\right]",
         ],
         examTip: "Histogram equalization is a CDF-based transform. Be able to compute S_k step by step given a small histogram. Remember: the result is never perfectly uniform because of rounding.",
+        interactive: "histogram-equalizer",
       },
       {
         title: "Histogram Matching (Specification)",
@@ -257,6 +260,7 @@ export const chapters: Chapter[] = [
           "f(x,y) \\star h(x,y) = \\int\\int f(s,t)\\,h(x-s, y-t)\\,ds\\,dt",
           "f(x,y) \\star h(x,y) \\Leftrightarrow F(u,v) \\cdot H(u,v)",
         ],
+        interactive: "convolution-demo",
       },
       {
         title: "2D Discrete Fourier Transform (DFT)",
@@ -276,6 +280,7 @@ export const chapters: Chapter[] = [
         title: "Phase Importance",
         content:
           "Most of the structural information in an image is in the PHASE, not the magnitude. Experiment: swap magnitude and phase between two images -- the result looks like whichever image contributed the phase.\n\nEven with noise magnitude + image phase, you can still recognize the image. Therefore: never manipulate the phase when filtering!",
+        interactive: "fourier-spectrum",
       },
       {
         title: "Fourier Spectrum & Filtering",
@@ -390,6 +395,7 @@ export const chapters: Chapter[] = [
         formulas: [
           "\\hat{F}(u,v) = \\frac{H^*(u,v)}{|H(u,v)|^2 + S_n/S_f} \\cdot G(u,v)",
         ],
+        interactive: "noise-restoration",
       },
       {
         title: "Degradation Estimation",
@@ -462,6 +468,7 @@ export const chapters: Chapter[] = [
           "|\\nabla f| \\approx |G_x| + |G_y|",
           "\\alpha(x,y) = \\tan^{-1}\\left(\\frac{G_y}{G_x}\\right)",
         ],
+        interactive: "edge-detectors",
       },
       {
         title: "Laplacian & LoG",
@@ -482,6 +489,7 @@ export const chapters: Chapter[] = [
         title: "Thresholding",
         content:
           "Global thresholding: Single threshold T applied to entire image. Pixels > T = object, else background. Good when histogram is bimodal.\n\nOtsu's method: Automatically finds optimal threshold by maximizing between-class variance.\n\nAdaptive/Local thresholding: Different thresholds for different image regions. Used when illumination varies.\n\nMultiple thresholding: Multiple thresholds for multiple classes.",
+        interactive: "thresholding-demo",
       },
     ],
     flashcards: [
@@ -557,6 +565,7 @@ export const chapters: Chapter[] = [
           "A \\bullet B = (A \\oplus B) \\ominus B",
         ],
         examTip: "Opening = erosion then dilation (removes small protrusions). Closing = dilation then erosion (fills small holes). Both are idempotent. Know which to use for noise removal on binary images.",
+        interactive: "morphology-playground",
       },
     ],
     flashcards: [
@@ -655,6 +664,7 @@ export const chapters: Chapter[] = [
           "\\text{Entropy} = -\\sum_i\\sum_j c_{ij}\\log_2(c_{ij})",
         ],
         examTip: "GLCM is a very testable topic. Be able to construct a small GLCM from a given image and positioning operator, normalize it, and compute contrast/homogeneity/entropy from it.",
+        interactive: "glcm-calculator",
       },
     ],
     flashcards: [
@@ -709,6 +719,7 @@ export const chapters: Chapter[] = [
         title: "Subband Coding",
         content:
           "1D: Split signal into low-band (approximation, h0) and high-band (detail, h1) using filter bank. Downsample each by 2. Reconstruct using synthesis filters (g0, g1) and upsampling.\n\n2D: Apply 1D filters along rows first, then columns. Produces 4 sub-images:\n- A (LL): Approximation -- low-pass both directions\n- H (HL): Horizontal details -- high-pass rows, low-pass columns\n- V (LH): Vertical details -- low-pass rows, high-pass columns\n- D (HH): Diagonal details -- high-pass both directions\n\nCan reconstruct original exactly using the synthesis filter bank.",
+        interactive: "wavelet-decomposition",
       },
       {
         title: "Multi-Level Decomposition",
