@@ -77,7 +77,7 @@ export default function App() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-[var(--bg)] border-r border-[var(--border)] flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-[var(--bg)] border-r border-[var(--border)] flex flex-col transition-transform duration-200 lg:translate-x-0 lg:sticky lg:z-auto lg:h-screen lg:top-0 lg:flex-shrink-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
