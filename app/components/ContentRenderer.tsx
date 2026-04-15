@@ -25,28 +25,13 @@ function parseBlocks(content: string): ContentBlock[] {
 
     // Detect "Label: rest of content" pattern
     // Must start with a word/phrase followed by colon, and the label shouldn't be too long
-    const colonMatch = trimmed.match(/^([A-Z][^:\n]{0,40}):\s*(.+)$/s);
+    const colonMatch = trimmed.match(/^([A-Z][^:\n]{0,40}):\s*([\s\S]+)$/);
     if (colonMatch) {
       return { label: colonMatch[1].trim(), body: colonMatch[2].trim() };
     }
 
     return { body: trimmed };
   });
-}
-
-function renderInlineText(text: string) {
-  // Bold key terms that appear before a colon within a line
-  // Also highlight inline formulas (things with = signs, subscripts, etc.)
-  const parts: (string | JSX.Element)[] = [];
-  let remaining = text;
-  let keyIndex = 0;
-
-  // Split on inline patterns we want to highlight
-  // Pattern: terms like "I_T = I_0 * e^(-muL)" or "s = T(r)"
-  const formulaRegex = /([A-Za-z_][A-Za-z_0-9]*\s*[=<>]\s*[^\n,;]{3,40})/g;
-
-  // Instead of complex regex, just return formatted text with line-level structure
-  return text;
 }
 
 function SubBlock({ block }: { block: ContentBlock }) {
